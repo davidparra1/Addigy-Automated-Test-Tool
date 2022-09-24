@@ -1,4 +1,3 @@
-import time
 import unittest
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -6,6 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 
 PATH = '/Users/dparra/PycharmProjects/pythonProject/chromedriver'
@@ -93,12 +93,12 @@ def signin():
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'email-input'))).send_keys(email)
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
                 (By.XPATH, "//button[@data-v-757e2e4a='' and @type='submit']"))).click()
-        time.sleep(2)
-        if driver.current_url == landingPage:
+        try:
+            WebDriverWait(driver, 5).until(EC.url_changes(driver.current_url))
+            break
+        except TimeoutException:
             print('Incorrect email. Please try again.\n')
             continue
-        else:
-            break
     if WebDriverWait(driver, 10).until(EC.presence_of_element_located(
             (By.ID, 'username'))).get_attribute("value") != email:
         driver.find_element(By.ID, 'username').clear()
@@ -107,27 +107,28 @@ def signin():
         password = askforpassword()
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'password'))).clear()
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'password'))).send_keys(password, Keys.ENTER)
-        time.sleep(2)
-        if newSignInPage in driver.current_url:
-            try:
-                driver.find_element(By.ID, 'captcha')
-                print('CAPTCHA detected. Please input CAPTCHA. (60s)')
-                WebDriverWait(driver, 60).until_not(EC.url_contains(newSignInPage))
-                break
-            except NoSuchElementException:
+        try:
+            WebDriverWait(driver, 5).until(EC.url_changes(driver.current_url))
+            break
+        except TimeoutException:
+            if newSignInPage in driver.current_url:
+                try:
+                    driver.find_element(By.ID, 'captcha')
+                    print('CAPTCHA detected. Please input CAPTCHA. (60s)\n')
+                    WebDriverWait(driver, 60).until(EC.url_changes(driver.current_url))
+                    break
+                except NoSuchElementException:
+                    print('Incorrect password. Please try again.\n')
+                    continue
+            elif oldSignInPage in driver.current_url:
                 print('Incorrect password. Please try again.\n')
                 continue
-        elif oldSignInPage in driver.current_url:
-            print('Incorrect password. Please try again.\n')
-            continue
-        else:
-            break
     if mfaPage in driver.current_url:
         print('New login experience detected. Waiting for MFA authentication. (80s)\n')
         WebDriverWait(driver, 80).until(EC.url_contains(mainPage))
     else:
         WebDriverWait(driver, 10).until(EC.url_contains(mainPage))
-    print('Successfully signed in!')
+    print('Successfully signed in!\n')
 
 
 def signout():
@@ -136,7 +137,7 @@ def signout():
         (By.XPATH, "//button[@class='button is-link' and @data-v-1995d9b0='']"))).click()
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
         (By.XPATH, "//a[@href='/logout']"))).click()
-    time.sleep(2)
+    WebDriverWait(driver, 10).until(EC.url_changes(driver.current_url))
 
 
 def checkformainpage():
