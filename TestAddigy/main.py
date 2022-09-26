@@ -16,15 +16,15 @@ driver = webdriver.Chrome(service=s)
 def testenv():
     while True:
         a = input("Which environment to test? (dev/stage/prod)?: ")
-        if a.casefold() == 'dev':
+        if 'dev'.casefold() in a:
             a = '-dev'
             print('Test environment selected: DEV\n')
             return a
-        elif a.casefold() == 'stage':
+        elif 'stage'.casefold() in a:
             a = '-stage'
             print('Test environment selected: STAGE\n')
             return a
-        elif a.casefold() == 'prod':
+        elif 'prod'.casefold() in a:
             a = ''
             print('Test environment selected: PROD\n')
             return a
@@ -64,7 +64,7 @@ def askforpassword():
 
 # make another function for new login experience #DONE
 # add conditional statement to MainTestCase that checks for old login experience vs new #DONE, NOT NEEDED
-# make changes to signOnTest if using new login experience? (potentially not needed) #DONE
+# need to make changes to signOnTest if using new login experience? (potentially not needed) #DONE
 # figure out how to run individual test cases inside of test suites #DONE
 # deal with 2FA if using new login experience #DONE
 # deal with CAPTCHA if using new login experience #DONE

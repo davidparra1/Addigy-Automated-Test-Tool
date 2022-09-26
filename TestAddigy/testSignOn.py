@@ -8,10 +8,10 @@ from TestAddigy.main import *
 
 class SignOn(MainTestCase):
 
-    def test_SignOn(self):
+    def test_a_SignOn(self):
         self.assertEqual(mainPage, driver.current_url)
 
-    def test_SignOut(self):
+    def test_b_SignOut(self):
         if driver.current_url == landingPage:
             signin()
         signout()
