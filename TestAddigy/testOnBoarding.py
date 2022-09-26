@@ -1,8 +1,6 @@
 import secrets
 import string
-
 from selenium.common import InvalidArgumentException
-
 from TestAddigy.main import *
 # from TestAddigy.info import *
 # from selenium.webdriver import Keys
@@ -84,18 +82,20 @@ def onboard():
     print('Random password generated! Password: ' + a)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'password'))).send_keys(a)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'repassword'))).send_keys(a)
-    while True:
-        a = input('Agree to the Master Subscription Agreement? (Y/N): ')
-        if a.upper() == 'Y' or a.lower() == 'y':
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'ula-agree'))).click()
-            break
-        else:
-            print('Error: Cannot create account without agreeing.\n')
-            continue
+    print('Automatically agreeing to the Master Subscription Agreement...')
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'ula-agree'))).click()
+    # while True:
+    #     a = input('Agree to the Master Subscription Agreement? (Y/N): ')
+    #     if a.upper() == 'Y' or a.lower() == 'y':
+    #         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'ula-agree'))).click()
+    #         break
+    #     else:
+    #         print('Error: Cannot create account without agreeing.\n')
+    #         continue
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
         (By.XPATH, "/html/body/div[3]/div[1]/div[2]/div/div/form[2]/div[6]/button"))).click()
     WebDriverWait(driver, 15).until(EC.url_contains(newSignInPage))
-    print('Organization successfully created!\n')
+    print('Organization successfully created!')
 
 
 class OnBoarding(unittest.TestCase):
@@ -117,4 +117,3 @@ class OnBoarding(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         getlogs()
-        cls.driver.close()

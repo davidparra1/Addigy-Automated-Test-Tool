@@ -1,3 +1,4 @@
+import time
 import unittest
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -128,7 +129,9 @@ def signin():
         WebDriverWait(driver, 80).until(EC.url_contains(mainPage))
     else:
         WebDriverWait(driver, 10).until(EC.url_contains(mainPage))
-    print('Successfully signed in!\n')
+    print('Successfully signed in!\n'
+          'Environment: ' + env +
+          '\nAccount Email: ' + email)
 
 
 def signout():
@@ -137,7 +140,8 @@ def signout():
         (By.XPATH, "//button[@class='button is-link' and @data-v-1995d9b0='']"))).click()
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
         (By.XPATH, "//a[@href='/logout']"))).click()
-    WebDriverWait(driver, 10).until(EC.url_changes(driver.current_url))
+    time.sleep(2)
+    print('Successfully signed out!\n')
 
 
 def checkformainpage():
@@ -252,7 +256,6 @@ class MainTestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         getlogs()
-        cls.driver.close()
 
 
 if __name__ == "__main__":
