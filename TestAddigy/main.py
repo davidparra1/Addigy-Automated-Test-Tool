@@ -2,6 +2,7 @@ import time
 import unittest
 from selenium import webdriver
 from selenium.common import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
@@ -9,6 +10,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 
+chrome_options = Options()
+chrome_options.add_experimental_option("detach", True)
 PATH = '/Users/dparra/PycharmProjects/pythonProject/chromedriver'
 s = Service(PATH)
 driver = webdriver.Chrome(service=s)
@@ -51,6 +54,7 @@ dashApplicationsPage = 'https://app' + env + '.addigy.com/dashboard/applications
 dashEventsPage = 'https://app' + env + '.addigy.com/dashboard/events'
 communityFactsPage = 'https://app' + env + '.addigy.com/community/facts'
 communityScriptsPage = 'https://app' + env + '.addigy.com/community/scripts'
+setUpPage = 'https://app' + env + '.addigy.com/setup'
 
 
 def askforemail():
